@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معمل اللغة الإنجليزية التفاعلي | English Language Lab</title>
+  <!-- خط اليمامة (Alyamama) المعتمد في كافة صفحات المنظومة -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Alyamama:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #04110c;
+      --surface: rgba(9, 31, 23, 0.78);
+      --surface-strong: rgba(7, 25, 19, 0.95);
+      --surface-inner: rgba(4, 16, 12, 0.86);
+      --border: rgba(52, 211, 153, 0.2);
+      --border-strong: rgba(16, 185, 129, 0.5);
+      --text: #ecfdf5;
+      --muted: #94b8ac;
+      --accent: #10b981;
+      --glow: #34d399;
+      --gold: #f59e0b;
+      --gold-light: #fde68a;
+      --cyan: #06b6d4;
+      --cyan-light: #67e8f9;
+      --purple: #a855f7;
+      --purple-light: #d8b4fe;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Alyamama', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 15%, rgba(245, 158, 11, 0.07) 0%, transparent 35%),
+        radial-gradient(circle at 85% 88%, rgba(6, 182, 212, 0.11) 0%, transparent 45%),
+        linear-gradient(180deg, #04110c 0%, #061912 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1280px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ========================================================================= */
+    /* 1. منصة البطل البصري الموحدة + شريط فحص الصوت ونصيحة المتصفح              */
+    /* ========================================================================= */
+    .hero-stage {
+      background: linear-gradient(145deg, rgba(11, 38, 29, 0.88) 0%, rgba(5, 19, 14, 0.94) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border-strong);
+      border-radius: 20px;
+      padding: 20px 24px 18px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.42);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(52, 211, 153, 0.15);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface-inner);
+      border: 1px solid var(--border);
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 0.77rem;
+      color: #d1fae5;
+      font-weight: 700;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--glow);
+      animation: dotPulse 2s infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.65; }
+    }
+
+    /* مجموعة فحص الصوت + عداد الأصوات المدعومة + نصيحة متصفح Edge */
+    .voice-toolkit-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .supported-voices-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.38);
+      color: #bae6fd;
+      padding: 5px 12px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      transition: all 0.25s ease;
+    }
+
+    .edge-tip-btn {
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.42);
+      color: var(--gold-light);
+      padding: 5px 11px;
+      border-radius: 10px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.22s ease;
+    }
+
+    .edge-tip-btn:hover {
+      background: rgba(245, 158, 11, 0.26);
+      border-color: #fbbf24;
+      transform: translateY(-1px);
+    }
+
+    /* البطاقة المنبثقة الصغيرة لنصيحة المتصفح */
+    .edge-tip-popover {
+      display: none;
+      margin-top: 10px;
+      margin-bottom: 6px;
+      background: rgba(14, 38, 29, 0.96);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      color: #fef3c7;
+      line-height: 1.6;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      animation: paneFade 0.25s ease;
+    }
+
+    .edge-tip-popover.open {
+      display: flex;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    @media (min-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1.55fr 1fr;
+      }
+    }
+
+    .brand-title-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .lab-emblem-svg {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 8px 18px rgba(16, 185, 129, 0.38));
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .brand-title-row:hover .lab-emblem-svg {
+      transform: translateY(-2px) scale(1.06) rotate(-3deg);
+    }
+
+    @keyframes waveBar {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(1.36); }
+    }
+    .w-bar-1 { transform-origin: center; animation: waveBar 2.1s ease-in-out infinite; }
+    .w-bar-2 { transform-origin: center; animation: waveBar 1.7s ease-in-out 0.25s infinite; }
+    .w-bar-3 { transform-origin: center; animation: waveBar 2.4s ease-in-out 0.5s infinite; }
+
+    .en-kicker {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--glow);
+      letter-spacing: 2.2px;
+      direction: ltr;
+      text-align: right;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .main-title {
+      font-size: clamp(1.75rem, 3.1vw, 2.3rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      text-shadow: 0 3px 0 rgba(16, 185, 129, 0.35);
+      transition: color 0.3s ease;
+    }
+
+    .brand-title-row:hover .main-title {
+      color: #a7f3d0;
+    }
+
+    .hero-desc {
+      font-size: 0.89rem;
+      color: #d1fae5;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .feature-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(6, 22, 16, 0.78);
+      border: 1px solid var(--border);
+    }
+
+    /* لوحة مفاتيح الستائر العلوية الثلاث */
+    .curtain-triggers-box {
+      background: var(--surface-inner);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .curtain-triggers-label {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .curtain-trigger-btn {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(13, 43, 33, 0.75);
+      border: 1px solid rgba(52, 211, 153, 0.22);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+    }
+
+    .curtain-trigger-btn:hover {
+      background: rgba(18, 59, 45, 0.95);
+      border-color: var(--glow);
+      transform: translateX(-2px);
+    }
+
+    .curtain-trigger-btn.active {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.28), rgba(6, 182, 212, 0.2));
+      border-color: var(--glow);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.22);
+    }
+
+    .trigger-chevron {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      color: var(--glow);
+    }
+
+    .curtain-trigger-btn.active .trigger-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* ========================================================================= */
+    /* 2. الستارة المعرفية المنسدلة العلوية (Top Sliding Curtain)                */
+    /* ========================================================================= */
+    .top-smart-curtain {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.46s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s ease, margin-top 0.32s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+
+    .top-smart-curtain.open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 14px;
+    }
+
+    .top-curtain-inner {
+      overflow: hidden;
+    }
+
+    .curtain-drawer-body {
+      background: rgba(4, 17, 12, 0.95);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .drawer-pane {
+      display: none;
+      animation: paneFade 0.3s ease;
+    }
+
+    .drawer-pane.active {
+      display: block;
+    }
+
+    @keyframes paneFade {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .drawer-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pillars-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+    }
+
+    .pillar-card {
+      background: rgba(11, 36, 27, 0.72);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .pillar-card:hover {
+      border-color: var(--glow);
+      transform: translateY(-2px);
+    }
+
+    .steps-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .roadmap-grid-5 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+    }
+
+    .roadmap-step-card {
+      background: rgba(11, 36, 27, 0.72);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .roadmap-step-card:hover {
+      border-color: var(--glow);
+      background: rgba(16, 52, 39, 0.9);
+      transform: translateY(-2px);
+    }
+
+    /* ========================================================================= */
+    /* 3. شريط بوصلة الستائر الذكية                                              */
+    /* ========================================================================= */
+    .compass-bar {
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .compass-chips-wrap {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .compass-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #d1fae5;
+      background: rgba(6, 22, 16, 0.82);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.22s ease;
+      user-select: none;
+    }
+
+    .compass-chip:hover {
+      border-color: var(--glow);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .compass-chip.active {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.32), rgba(5, 150, 105, 0.22));
+      border-color: var(--glow);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28);
+    }
+
+    /* ========================================================================= */
+    /* 4. مسرح الستائر الخمس المتناظرة (تبدأ جميعها مطوية وبنفس الحجم)            */
+    /* ========================================================================= */
+    .curtains-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+      .curtains-stage {
+        flex-direction: row;
+        height: 415px;
+        align-items: stretch;
+      }
+    }
+
+    .lab-curtain {
+      background: var(--surface);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition:
+        flex 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease,
+        transform 0.28s ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38);
+    }
+
+    @media (min-width: 1024px) {
+      .curtains-stage .lab-curtain {
+        flex: 1;
+        min-width: 0;
+      }
+      .curtains-stage .lab-curtain:not(.active):hover {
+        border-color: rgba(52, 211, 153, 0.45);
+        transform: translateY(-3px);
+      }
+      .curtains-stage .lab-curtain.active {
+        flex: 3.7;
+        background: var(--surface-strong);
+        border-color: var(--glow);
+        box-shadow: 0 16px 42px rgba(16, 185, 129, 0.22);
+        cursor: default;
+      }
+    }
+
+    .lab-curtain.active {
+      border-color: var(--glow);
+      background: var(--surface-strong);
+    }
+
+    @keyframes welcomeShimmer {
+      0% { border-color: var(--border); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38); }
+      50% { border-color: var(--glow); box-shadow: 0 0 26px rgba(52, 211, 153, 0.32); transform: translateY(-3px); }
+      100% { border-color: var(--border); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38); }
+    }
+
+    .lab-curtain.shimmer-intro {
+      animation: welcomeShimmer 0.65s ease;
+    }
+
+    /* شريط الإضاءة العلوي لكل ستارة */
+    .lab-curtain::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 4px;
+      background: var(--lab-color, var(--accent));
+      opacity: 0.72;
+      transition: opacity 0.3s ease, height 0.3s ease;
+    }
+
+    .lab-curtain.active::after,
+    .lab-curtain:hover::after {
+      opacity: 1;
+      height: 5px;
+    }
+
+    /* واجهة الستارة وهي مطوية (تظهر متساوية مع أخواتها) */
+    .curtain-spine {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .lab-curtain.active .curtain-spine {
+      border-bottom-color: rgba(52, 211, 153, 0.14);
+      padding-bottom: 14px;
+      cursor: pointer;
+    }
+
+    @media (min-width: 1024px) {
+      .curtains-stage .lab-curtain:not(.active) .curtain-spine {
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        padding: 24px 14px 20px;
+      }
+      .curtains-stage .lab-curtain:not(.active) .spine-left {
+        flex-direction: column;
+        gap: 14px;
+      }
+      .curtains-stage .lab-curtain:not(.active) .spine-title-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .curtains-stage .lab-curtain:not(.active) .spine-ar-title {
+        font-size: 1.15rem;
+        line-height: 1.35;
+      }
+      .curtains-stage .lab-curtain:not(.active) .spine-meta {
+        align-items: center;
+        width: 100%;
+      }
+    }
+
+    .spine-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .lab-svg-badge {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .lab-curtain:hover .lab-svg-badge {
+      transform: scale(1.08);
+    }
+
+    .spine-en-sub {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      direction: ltr;
+      text-transform: uppercase;
+      display: block;
+      opacity: 0.9;
+    }
+
+    .spine-ar-title {
+      font-size: 1.26rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    /* الكبسولات المصغرة التي تزيّن الستارة وهي مطوية على الكمبيوتر */
+    .folded-preview-pills {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      margin: 8px 0;
+    }
+
+    @media (min-width: 1024px) {
+      .curtains-stage .lab-curtain:not(.active) .folded-preview-pills {
+        display: flex;
+      }
+    }
+
+    .folded-mini-pill {
+      font-size: 0.72rem;
+      color: #d1fae5;
+      background: rgba(4, 16, 12, 0.65);
+      border: 1px solid rgba(52, 211, 153, 0.16);
+      padding: 5px 10px;
+      border-radius: 10px;
+      line-height: 1.35;
+    }
+
+    .spine-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+
+    .lab-num-display {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: rgba(52, 211, 153, 0.34);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .lab-curtain.active .lab-num-display,
+    .lab-curtain:hover .lab-num-display {
+      color: var(--glow);
+      transform: scale(1.08);
+    }
+
+    .open-curtain-hint {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.28);
+      color: #a7f3d0;
+      white-space: nowrap;
+      transition: all 0.25s ease;
+    }
+
+    .lab-curtain.active .open-curtain-hint {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.16);
+      color: var(--muted);
+    }
+
+    /* محتوى الستارة الداخلي عند الفتح */
+    .curtain-reveal-wrap {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s ease;
+      flex: 1;
+    }
+
+    .lab-curtain.active .curtain-reveal-wrap {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    @media (min-width: 1024px) {
+      .curtains-stage .lab-curtain:not(.active) .curtain-reveal-wrap {
+        display: none;
+      }
+    }
+
+    .curtain-reveal-body {
+      overflow: hidden;
+      padding: 0 20px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .lab-curtain.active .curtain-reveal-body {
+      padding-top: 14px;
+    }
+
+    .lab-summary-text {
+      font-size: 0.86rem;
+      color: #d1fae5;
+      line-height: 1.68;
+    }
+
+    .lab-capsules-box {
+      background: var(--surface-inner);
+      border: 1px solid rgba(52, 211, 153, 0.2);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .lab-capsule-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .capsule-bullet {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    .curtain-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+
+    /* الأزرار العامة */
+    button, .btn-launch {
+      padding: 9px 15px;
+      border-radius: 11px;
+      border: 1px solid transparent;
+      font-size: 0.83rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    button:active, .btn-launch:active {
+      transform: scale(0.97);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.32);
+    }
+
+    .btn-emerald:hover {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      box-shadow: 0 8px 24px rgba(52, 211, 153, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-glass {
+      background: rgba(15, 46, 35, 0.82);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-glass:hover {
+      background: rgba(22, 66, 51, 0.95);
+      border-color: var(--glow);
+      color: #fff;
+    }
+
+    .btn-compact {
+      padding: 6px 12px;
+      font-size: 0.76rem;
+      border-radius: 10px;
+    }
+
+    /* مؤشر الموجات الصوتية الحي */
+    .voice-wave-indicator {
+      display: none;
+      align-items: center;
+      gap: 3px;
+      height: 16px;
+    }
+
+    .voice-wave-indicator.speaking {
+      display: inline-flex;
+    }
+
+    .v-bar {
+      width: 3px;
+      height: 100%;
+      background: var(--glow);
+      border-radius: 2px;
+      animation: voiceBounce 0.6s ease-in-out infinite alternate;
+    }
+    .v-bar:nth-child(2) { animation-delay: 0.15s; background: var(--gold); }
+    .v-bar:nth-child(3) { animation-delay: 0.3s; background: var(--cyan-light); }
+    .v-bar:nth-child(4) { animation-delay: 0.45s; }
+
+    @keyframes voiceBounce {
+      from { transform: scaleY(0.3); }
+      to { transform: scaleY(1); }
+    }
+
+    /* الإشعار الذكي العائم */
+    .smart-toast {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%) translateY(130%);
+      background: rgba(6, 26, 19, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glow);
+      border-radius: 15px;
+      padding: 12px 18px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 25px rgba(16, 185, 129, 0.25);
+      z-index: 100000;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.28s ease;
+      max-width: 92vw;
+    }
+
+    .smart-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    footer {
+      text-align: center;
+      padding: 16px 14px 8px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ========================================================================= -->
+  <!-- 1. منصة البطل البصري + شريط فحص الصوت + الستائر المعرفية الثلاث           -->
+  <!-- ========================================================================= -->
+  <section class="hero-stage">
+
+    <!-- الشريط العلوي المدمج: حالة المنظومة + فحص الصوت + عداد الأصوات + نصيحة Edge -->
+    <div class="hero-top-bar">
+      <span class="status-pill">
+        <span class="pulse-dot"></span>
+        <span>منظومة المهارات الخمس التفاعلية الذكية</span>
+      </span>
+
+      <div class="voice-toolkit-cluster">
+        <div id="globalWaveIndicator" class="voice-wave-indicator" title="النطق الصوتي يعمل الآن">
+          <span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span>
+        </div>
+
+        <button type="button" class="btn-glass btn-compact" onmouseenter="SoundFX.air()" onclick="testSystemVoice()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#67e8f9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+          <span>فحص النطق الصوتي</span>
+        </button>
+
+        <span id="supportedVoicesBadge" class="supported-voices-pill" title="عدد الأصوات الإنجليزية المكتشفة في متصفحك الحالي">
+          <span>الأصوات المدعومة:</span>
+          <strong id="voicesCountNum" style="color: #fff;">...</strong>
+        </span>
+
+        <button type="button" id="edgeTipBtn" class="edge-tip-btn" onmouseenter="SoundFX.air()" onclick="toggleEdgeTip()">
+          <span>💡 نصيحة الأصوات</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- الشريط التوضيحي لنصيحة متصفح Edge (يظهر عند الضغط على زر نصيحة الأصوات) -->
+    <div id="edgeTipPopover" class="edge-tip-popover">
+      <div id="edgeTipContent">
+        <strong>💡 نصيحة للحصول على أفضل تجربة صوتية:</strong> الاستخدام الأمثل للمعمل يكون عبر <b>جهاز الكمبيوتر (PC / Laptop)</b> ومتصفح <b>Microsoft Edge</b>؛ حيث يوفر مجاناً أكثر من <b>40 صوتاً بشرياً طبيعياً (Natural Neural Voices)</b> داعماً للغة الإنجليزية بلهجات متعددة.
+      </div>
+      <button type="button" class="btn-glass btn-compact" onclick="toggleEdgeTip()">إغلاق ✕</button>
+    </div>
+
+    <div class="hero-grid">
+      <!-- العمود الأيمن: الشعار المبتكر والوصف الشامل -->
+      <div>
+        <div class="brand-title-row" onmouseenter="SoundFX.air()" onclick="toggleTopCurtain('pillars')">
+          <svg class="lab-emblem-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="hexGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#10b981"></stop>
+                <stop offset="55%" stop-color="#059669"></stop>
+                <stop offset="100%" stop-color="#06b6d4"></stop>
+              </linearGradient>
+              <linearGradient id="goldWave" x1="12" y1="8" x2="52" y2="56" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#fde68a"></stop>
+                <stop offset="100%" stop-color="#f59e0b"></stop>
+              </linearGradient>
+            </defs>
+            <path d="M32 4L56 17.5V46.5L32 60L8 46.5V17.5L32 4Z" fill="rgba(5, 24, 17, 0.92)" stroke="url(#hexGrad)" stroke-width="2.5"></path>
+            <path d="M32 9L51.5 20V44L32 55L12.5 44V20L32 9Z" stroke="rgba(52, 211, 153, 0.25)" stroke-width="1" stroke-dasharray="3 3"></path>
+            <rect class="w-bar-1" x="19" y="26" width="3.8" height="14" rx="1.9" fill="#34d399"></rect>
+            <rect class="w-bar-2" x="26" y="18" width="3.8" height="28" rx="1.9" fill="url(#goldWave)"></rect>
+            <rect class="w-bar-3" x="33" y="22" width="3.8" height="20" rx="1.9" fill="#38bdf8"></rect>
+            <rect class="w-bar-1" x="40" y="27" width="3.8" height="12" rx="1.9" fill="#c084fc"></rect>
+            <circle cx="32" cy="12.5" r="2.2" fill="#fde68a"></circle>
+          </svg>
+
+          <div>
+            <span class="en-kicker">AI-POWERED LINGUISTIC ECOSYSTEM</span>
+            <h1 class="main-title">معمل اللغة الإنجليزية</h1>
+          </div>
+        </div>
+
+        <p class="hero-desc">
+          منظومة تدريب ذاتي ذكية تتناول إتقان اللغة الإنجليزية <b>بأسلوب عملي متدرج</b>؛ صُممت لتوفر لك <b>مساحة تدريب آمنة ومستقلة</b> تكسر حاجز التردد، وتتيح لك الممارسة الصوتية والكتابية بحرية وخصوصية تامة، مع استخلاص تقييم تحليلي عميق عبر أي نموذج ذكاء اصطناعي مجاني تفضله بدون مفاتيح برمجية وبدون أي اشتراكات مالية.
+        </p>
+
+        <div class="hero-badges">
+          <span class="feature-badge" style="border-color: rgba(52, 211, 153, 0.45);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            <span>مجاني ومستدام 100%</span>
+          </span>
+          <span class="feature-badge" style="border-color: rgba(56, 189, 248, 0.45);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>
+            <span>يعمل مع أي ذكاء اصطناعي بلا API</span>
+          </span>
+          <span class="feature-badge" style="border-color: rgba(192, 132, 252, 0.45);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"></path></svg>
+            <span>قواميس صوتية بشرية مدمجة</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- العمود الأيسر: مفاتيح الستائر المعرفية المنسدلة -->
+      <div class="curtain-triggers-box">
+        <div class="curtain-triggers-label">
+          <span>دليل المنظومة السريع:</span>
+        </div>
+
+        <button type="button" id="trig-pillars" class="curtain-trigger-btn" onmouseenter="SoundFX.air()" onclick="toggleTopCurtain('pillars')">
+          <span style="display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>1. المرتكزات الذكية والمزايا الجوهرية</span>
+          </span>
+          <span class="trigger-chevron">▼</span>
+        </button>
+
+        <button type="button" id="trig-how" class="curtain-trigger-btn" onmouseenter="SoundFX.air()" onclick="toggleTopCurtain('how')">
+          <span style="display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <span>2. آلية الربط الذكي (الخطوات الـ 3 بلا API)</span>
+          </span>
+          <span class="trigger-chevron">▼</span>
+        </button>
+
+        <button type="button" id="trig-roadmap" class="curtain-trigger-btn" onmouseenter="SoundFX.air()" onclick="toggleTopCurtain('roadmap')">
+          <span style="display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+            <span>3. مسار البدء المتدرج (من الاستيعاب للإنتاج)</span>
+          </span>
+          <span class="trigger-chevron">▼</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- المحتوى المنسدل للستارة العلوية الذكية -->
+    <div id="topSmartCurtain" class="top-smart-curtain">
+      <div class="top-curtain-inner">
+        <div class="curtain-drawer-body">
+
+          <!-- محتوى الستارة 1: المرتكزات الذكية والمزايا الجوهرية -->
+          <div id="pane-pillars" class="drawer-pane">
+            <div class="drawer-header-bar">
+              <span style="font-weight: 800; color: var(--glow); font-size: 0.92rem;">المرتكزات الذكية والمزايا الجوهرية للمعمل</span>
+              <button type="button" class="btn-glass btn-compact" onclick="toggleTopCurtain(null)" title="إغلاق الستارة">▲</button>
+            </div>
+            <div class="pillars-grid-4">
+              <div class="pillar-card" style="border-top: 3px solid var(--accent);">
+                <div style="font-weight: 800; color: #fff; font-size: 0.88rem; margin-bottom: 5px;">خصوصية تامة وكسر للرهبة</div>
+                <p style="font-size: 0.78rem; color: var(--muted); line-height: 1.55;">
+                  تدرّب بمفردك وكرر المحاولة الصوتية عشرات المرات بحرية كاملة دون أي حرج اجتماعي حتى تنطلق بثقة.
+                </p>
+              </div>
+              <div class="pillar-card" style="border-top: 3px solid var(--cyan);">
+                <div style="font-weight: 800; color: #fff; font-size: 0.88rem; margin-bottom: 5px;">تقييم ذكي بلا API</div>
+                <p style="font-size: 0.78rem; color: var(--muted); line-height: 1.55;">
+                  برمجية ذكية داخل كل معمل تولّد لك البرومبت وتستورد كود التقييم الملون من أي ذكاء اصطناعي مجاني.
+                </p>
+              </div>
+              <div class="pillar-card" style="border-top: 3px solid var(--gold);">
+                <div style="font-weight: 800; color: #fff; font-size: 0.88rem; margin-bottom: 5px;">تشريح لغوي وصوتي عميق</div>
+                <p style="font-size: 0.78rem; color: var(--muted); line-height: 1.55;">
+                  تحليل صرفي للجذور واللواحق، كشف للفخاخ الصوتية والأحرف الصامتة، ومقارنة مباشرة مع نطق المتحدث الأصلي.
+                </p>
+              </div>
+              <div class="pillar-card" style="border-top: 3px solid var(--purple);">
+                <div style="font-weight: 800; color: #fff; font-size: 0.88rem; margin-bottom: 5px;">مستويات تدقيق مرنة</div>
+                <p style="font-size: 0.78rem; color: var(--muted); line-height: 1.55;">
+                  اختر مستوى التدقيق المناسب لهدفك؛ من التوجيه الهادئ المشجع للمبتدئين وحتى التدقيق الأكاديمي المتقدم.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- محتوى الستارة 2: الخطوات الـ 3 -->
+          <div id="pane-how" class="drawer-pane">
+            <div class="drawer-header-bar">
+              <span style="font-weight: 800; color: var(--gold-light); font-size: 0.92rem;">كيف يعمل المعمل مع أي ذكاء اصطناعي مجاناً وبدون مفاتيح API؟</span>
+              <button type="button" class="btn-glass btn-compact" onclick="toggleTopCurtain(null)" title="إغلاق الستارة">▲</button>
+            </div>
+            <div class="steps-grid-3">
+              <div class="pillar-card" style="border-right: 4px solid var(--glow);">
+                <div style="font-weight: 800; color: #6ee7b7; margin-bottom: 4px; font-size: 0.86rem;">الخطوة 1: الممارسة الحرة داخل المعمل</div>
+                <p style="font-size: 0.79rem; color: var(--text); line-height: 1.55;">
+                  سواء كنت تسجل صوتك في المحادثة أو القراءة، أو تكتب مقالك في مدرب الكتابة، يقوم المعمل بتجهيز مادتك وحفظ ملفك الصوتي تلقائياً.
+                </p>
+              </div>
+              <div class="pillar-card" style="border-right: 4px solid var(--gold);">
+                <div style="font-weight: 800; color: var(--gold-light); margin-bottom: 4px; font-size: 0.86rem;">الخطوة 2: نسخ البرومبت المبرمج بنقرة زر</div>
+                <p style="font-size: 0.79rem; color: var(--text); line-height: 1.55;">
+                  اضغط زر (نسخ البرومبت) في الصفحة، ثم الصقه في أي ذكاء اصطناعي مجاني تستخدمه (ChatGPT أو Gemini أو Claude أو Copilot) مع إرفاق ملفك الصوتي.
+                </p>
+              </div>
+              <div class="pillar-card" style="border-right: 4px solid var(--purple);">
+                <div style="font-weight: 800; color: var(--purple-light); margin-bottom: 4px; font-size: 0.86rem;">الخطوة 3: لصق كود JSON وعرض التقرير الملون</div>
+                <p style="font-size: 0.79rem; color: var(--text); line-height: 1.55;">
+                  انسخ كود التقييم الذي يولده الذكاء الاصطناعي وألصقه في خانة (استيراد التقييم) بالمعمل لتتحول الصفحة فوراً إلى لوحة نتائج تفاعلية ملونة.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- محتوى الستارة 3: مسار البدء المتدرج -->
+          <div id="pane-roadmap" class="drawer-pane">
+            <div class="drawer-header-bar">
+              <span style="font-weight: 800; color: var(--cyan-light); font-size: 0.92rem;">المسار التطويري المقترح (انقر على أي مرحلة لفتح ستارة معملها بالأسفل):</span>
+              <button type="button" class="btn-glass btn-compact" onclick="toggleTopCurtain(null)" title="إغلاق الستارة">▲</button>
+            </div>
+            <div class="roadmap-grid-5">
+              <div class="roadmap-step-card" onclick="activateLabCurtain('lab-vocab', true)">
+                <div style="font-weight: 800; color: #e9d5ff; font-size: 0.83rem; margin-bottom: 3px;">1. معمل المفردات (تأسيس)</div>
+                <p style="font-size: 0.75rem; color: var(--muted); line-height: 1.45;">فهم جذور الكلمات وسماع نطقها البشري دون أي مطالبات صوتية.</p>
+              </div>
+              <div class="roadmap-step-card" onclick="activateLabCurtain('lab-listening', true)">
+                <div style="font-weight: 800; color: #7dd3fc; font-size: 0.83rem; margin-bottom: 3px;">2. استوديو الاستماع (إرهاف السمع)</div>
+                <p style="font-size: 0.75rem; color: var(--muted); line-height: 1.45;">تدريب الأذن على سرعة وتنغيم الحوارات الطبيعية بنمط الاستماع الأعمى.</p>
+              </div>
+              <div class="roadmap-step-card" onclick="activateLabCurtain('lab-reading', true)">
+                <div style="font-weight: 800; color: #6ee7b7; font-size: 0.83rem; margin-bottom: 3px;">3. مدرب القراءة (نطق موجه)</div>
+                <p style="font-size: 0.75rem; color: var(--muted); line-height: 1.45;">تحريك اللسان بنص جاهز أمامك وضبط مخارج الحروف والوقفات.</p>
+              </div>
+              <div class="roadmap-step-card" onclick="activateLabCurtain('lab-writing', true)">
+                <div style="font-weight: 800; color: #fde68a; font-size: 0.83rem; margin-bottom: 3px;">4. مدرب الكتابة (صياغة هادئة)</div>
+                <p style="font-size: 0.75rem; color: var(--muted); line-height: 1.45;">بناء الجمل على مهل ومراجعتها بميزة التدقيق السمعي وبدائل المتحدث الأصلي.</p>
+              </div>
+              <div class="roadmap-step-card" onclick="activateLabCurtain('lab-speaking', true)">
+                <div style="font-weight: 800; color: #a7f3d0; font-size: 0.83rem; margin-bottom: 3px;">5. مدرب المحادثة (انطلاق تام)</div>
+                <p style="font-size: 0.75rem; color: var(--muted); line-height: 1.45;">التفاعل الصوتي المباشر بملء الشاشة في مواقف الحياة الواقعية.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 2. شريط بوصلة التوجيه السريع                                              -->
+  <!-- ========================================================================= -->
+  <nav class="compass-bar" aria-label="بوصلة التدريب السريع">
+    <div class="compass-chips-wrap">
+      <span style="font-size: 0.83rem; font-weight: 800; color: #fff; display: inline-flex; align-items: center; gap: 6px; margin-left: 4px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+        <span>بوصلة المعمل:</span>
+      </span>
+
+      <span class="compass-chip" data-target="lab-vocab" onmouseenter="SoundFX.air()" onclick="handleCompassClick('lab-vocab')">
+        <span>تشريح المفردات</span>
+      </span>
+      <span class="compass-chip" data-target="lab-listening" onmouseenter="SoundFX.air()" onclick="handleCompassClick('lab-listening')">
+        <span>&nbsp;استوديو الاستماع</span>
+      </span>
+      <span class="compass-chip" data-target="lab-reading" onmouseenter="SoundFX.air()" onclick="handleCompassClick('lab-reading')">
+        <span>&nbsp;مدرب القراءة</span>
+      </span>
+      <span class="compass-chip" data-target="lab-writing" onmouseenter="SoundFX.air()" onclick="handleCompassClick('lab-writing')">
+        <span>&nbsp;مدرب الكتابة</span>
+      </span>
+      <span class="compass-chip" data-target="lab-speaking" onmouseenter="SoundFX.air()" onclick="handleCompassClick('lab-speaking')">
+        <span>&nbsp;المحادثة الحية</span>
+      </span>
+    </div>
+
+    </nav>
+
+  <!-- ========================================================================= -->
+  <!-- 3. مسرح الستائر الخمس المتناظرة (تبدأ جميعها مطوية ومتساوية)              -->
+  <!-- ========================================================================= -->
+  <main id="curtainsStage" class="curtains-stage">
+
+    <!-- الستارة 01: معمل المفردات السياقي -->
+    <article class="lab-curtain" id="lab-vocab" style="--lab-color: #a855f7;" onclick="handleCurtainClick('lab-vocab')">
+      <div class="curtain-spine">
+        <div class="spine-left">
+          <div class="lab-svg-badge" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(88, 28, 135, 0.4)); border-color: rgba(192, 132, 252, 0.5);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e9d5ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5" stroke="#c084fc"></path><path d="M2 12l10 5 10-5" stroke="#a855f7"></path></svg>
+          </div>
+          <div class="spine-title-group">
+            <span class="spine-en-sub" style="color: #c084fc;">VOCABULARY LAB</span>
+            <h2 class="spine-ar-title">معمل المفردات السياقي</h2>
+          </div>
+        </div>
+
+        <div class="folded-preview-pills">
+          <span class="folded-mini-pill">تشريح الجذور واللواحق</span>
+          <span class="folded-mini-pill">رموز النطق الصوتي IPA</span>
+          <span class="folded-mini-pill">5 قواميس بشرية</span>
+        </div>
+
+        <div class="spine-meta">
+          <span class="lab-num-display">01</span>
+          <span class="open-curtain-hint">الاطلاع والاستكشاف ◄</span>
+        </div>
+      </div>
+
+      <div class="curtain-reveal-wrap">
+        <div class="curtain-reveal-body">
+          <p class="lab-summary-text">
+            استكشف البنية العميقة للكلمات المعقدة عبر تشريح جذورها وسوابقها ولواحقها، وتعرف على مواضع النبر الصوتي وفخاخ النطق داخل سياقها الفعلي.
+          </p>
+
+          <div class="lab-capsules-box">
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #c084fc;"></span>
+              <span>تشريح صرفي ملون (السوابق، الجذور، واللواحق) مع موسوعة 70+ زائدة صرفية.</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #c084fc;"></span>
+              <span>موسوعة تفاعلية لـ 44 صوتاً ورمزاً صوتياً (IPA) وكشف تلقائي للأحرف الصامتة.</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #c084fc;"></span>
+              <span>مقارنة النطق الفوري مع 5 قواميس بشرية (كامبريدج، أكسفورد، ويكيميديا، القاموس الحر).</span>
+            </div>
+          </div>
+
+          <div class="curtain-actions-row" onclick="event.stopPropagation()">
+            <a id="link-vocab" href="https://naifwork.github.io/Reading/1/" class="btn-launch btn-emerald" style="flex: 1;" onmouseenter="SoundFX.air()">
+              <span>انطلق إلى معمل المفردات</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            <button type="button" class="btn-glass" onclick="speakPreview('Welcome to the Context Vocabulary Lab. Explore word roots, prefixes, and authentic human pronunciation.')" title="معاينة صوتية ناطقة">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              <span style="font-size: 0.76rem;">معاينة</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- الستارة 02: استوديو الاستماع التفاعلي -->
+    <article class="lab-curtain" id="lab-listening" style="--lab-color: #06b6d4;" onclick="handleCurtainClick('lab-listening')">
+      <div class="curtain-spine">
+        <div class="spine-left">
+          <div class="lab-svg-badge" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(14, 116, 144, 0.4)); border-color: rgba(56, 189, 248, 0.5);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#bae6fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" stroke="#38bdf8"></path></svg>
+          </div>
+          <div class="spine-title-group">
+            <span class="spine-en-sub" style="color: #38bdf8;">LISTENING STUDIO</span>
+            <h2 class="spine-ar-title">استوديو الاستماع التفاعلي</h2>
+          </div>
+        </div>
+
+        <div class="folded-preview-pills">
+          <span class="folded-mini-pill">حوارات متعددة الشخصيات</span>
+          <span class="folded-mini-pill">نمط الاستماع الأعمى</span>
+          <span class="folded-mini-pill">تصدير ملفات صوتية WAV</span>
+        </div>
+
+        <div class="spine-meta">
+          <span class="lab-num-display">02</span>
+          <span class="open-curtain-hint">الاطلاع والاستكشاف ◄</span>
+        </div>
+      </div>
+
+      <div class="curtain-reveal-wrap">
+        <div class="curtain-reveal-body">
+          <p class="lab-summary-text">
+            مسرح سمعي يحول أي نص أو قصة إلى حوار حي متعدد الشخصيات بأصوات وسرعات مستقلة لتدريب أذنك وفك ارتباطها بالعين.
+          </p>
+
+          <div class="lab-capsules-box">
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #38bdf8;"></span>
+              <span>تعدد شخصيات لا محدود مع تخصيص صوت وسرعة مستقلة لكل متحدث في الحوار.</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #38bdf8;"></span>
+              <span>وضع «الاستماع الأعمى» لتمويه النص، وتحدي اقتناص الكلمات الإملائي (Cloze).</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #38bdf8;"></span>
+              <span>توليد اختبارات استيعاب بالذكاء الاصطناعي وتصدير الحوار كملف صوتي (WAV).</span>
+            </div>
+          </div>
+
+          <div class="curtain-actions-row" onclick="event.stopPropagation()">
+            <a id="link-listening" href="https://naifwork.github.io/listening1/" class="btn-launch btn-emerald" style="flex: 1;" onmouseenter="SoundFX.air()">
+              <span>انطلق إلى استوديو الاستماع</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            <button type="button" class="btn-glass" onclick="speakPreview('Welcome to the Interactive Listening Studio. Train your ear with multi-speaker dialogues and blind listening.')" title="معاينة صوتية ناطقة">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              <span style="font-size: 0.76rem;">معاينة</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- الستارة 03: مدرب القراءة التفاعلي -->
+    <article class="lab-curtain" id="lab-reading" style="--lab-color: #10b981;" onclick="handleCurtainClick('lab-reading')">
+      <div class="curtain-spine">
+        <div class="spine-left">
+          <div class="lab-svg-badge" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 95, 70, 0.4)); border-color: rgba(52, 211, 153, 0.5);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a7f3d0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" stroke="#34d399"></path></svg>
+          </div>
+          <div class="spine-title-group">
+            <span class="spine-en-sub" style="color: #34d399;">READING COACH</span>
+            <h2 class="spine-ar-title">مدرب القراءة التفاعلي</h2>
+          </div>
+        </div>
+
+        <div class="folded-preview-pills">
+          <span class="folded-mini-pill">تلوين الفخاخ الصوتية</span>
+          <span class="folded-mini-pill">القراءة الموجهة Bionic</span>
+          <span class="folded-mini-pill">مقارنة نطقك المسجل</span>
+        </div>
+
+        <div class="spine-meta">
+          <span class="lab-num-display">03</span>
+          <span class="open-curtain-hint">الاطلاع والاستكشاف ◄</span>
+        </div>
+      </div>
+
+      <div class="curtain-reveal-wrap">
+        <div class="curtain-reveal-body">
+          <p class="lab-summary-text">
+            جهّز أي نص إنجليزي بصرياً وصوتياً، وسجّل قراءتك الجهرية لتحليل إيقاع الإلقاء ومواضع التنفس واكتشاف النهايات المسقطة.
+          </p>
+
+          <div class="lab-capsules-box">
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #34d399;"></span>
+              <span>تلوين الفخاخ الصوتية ونهايات الكلمات (s/ed) ودعم القراءة الموجهة (Bionic).</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #34d399;"></span>
+              <span>تسجيل صوتك ومقارنة نطقك المسجل في كل كلمة مباشرة بالنطق البشري.</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #34d399;"></span>
+              <span>مولد برومبتات لإنشاء قطع قرائية مخصصة حسب المدة والنوع والمستوى.</span>
+            </div>
+          </div>
+
+          <div class="curtain-actions-row" onclick="event.stopPropagation()">
+            <a id="link-reading" href="https://naifwork.github.io/Reading/" class="btn-launch btn-emerald" style="flex: 1;" onmouseenter="SoundFX.air()">
+              <span>انطلق إلى مدرب القراءة</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            <button type="button" class="btn-glass" onclick="speakPreview('Welcome to the Reading Coach Dashboard. Master your pacing, breathing pauses, and word endings.')" title="معاينة صوتية ناطقة">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              <span style="font-size: 0.76rem;">معاينة</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- الستارة 04: مدرب الكتابة التفاعلي -->
+    <article class="lab-curtain" id="lab-writing" style="--lab-color: #f59e0b;" onclick="handleCurtainClick('lab-writing')">
+      <div class="curtain-spine">
+        <div class="spine-left">
+          <div class="lab-svg-badge" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(146, 64, 14, 0.4)); border-color: rgba(251, 191, 36, 0.5);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fde68a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" stroke="#fbbf24"></path><path d="M2 2l7.586 7.586"></path></svg>
+          </div>
+          <div class="spine-title-group">
+            <span class="spine-en-sub" style="color: #fbbf24;">WRITING STUDIO</span>
+            <h2 class="spine-ar-title">مدرب الكتابة التفاعلي</h2>
+          </div>
+        </div>
+
+        <div class="folded-preview-pills">
+          <span class="folded-mini-pill">التدقيق السمعي للمسودة</span>
+          <span class="folded-mini-pill">تحدي توظيف المفردات</span>
+          <span class="folded-mini-pill">بدائل الكاتب الأصلي</span>
+        </div>
+
+        <div class="spine-meta">
+          <span class="lab-num-display">04</span>
+          <span class="open-curtain-hint">الاطلاع والاستكشاف ◄</span>
+        </div>
+      </div>
+
+      <div class="curtain-reveal-wrap">
+        <div class="curtain-reveal-body">
+          <p class="lab-summary-text">
+            استوديو كتابة متكامل لصياغة الإيميلات والمقالات الأكاديمية، مع تدقيق سمعي للمسودة وتقييم يرتقي بأسلوبك لمستوى الكاتب الأصلي.
+          </p>
+
+          <div class="lab-capsules-box">
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #fbbf24;"></span>
+              <span>ميزة «التدقيق السمعي» (Proofread by Ear) لسماع مسودتك واكتشاف العثرات بالأذن.</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #fbbf24;"></span>
+              <span>تحدي توظيف المفردات المستهدفة ووضع التركيز الكامل بملء الشاشة (Zen Mode).</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #fbbf24;"></span>
+              <span>مراجعة تفصيلية جملة بجملة مع اقتراحات الصياغة الطبيعية للمتحدث الأصلي.</span>
+            </div>
+          </div>
+
+          <div class="curtain-actions-row" onclick="event.stopPropagation()">
+            <a id="link-writing" href="https://naifwork.github.io/writing/" class="btn-launch btn-emerald" style="flex: 1;" onmouseenter="SoundFX.air()">
+              <span>انطلق إلى مدرب الكتابة</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            <button type="button" class="btn-glass" onclick="speakPreview('Welcome to the Interactive Writing Coach. Polish your essays, emails, and academic flow.')" title="معاينة صوتية ناطقة">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              <span style="font-size: 0.76rem;">معاينة</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- الستارة 05: مدرب المحادثة التفاعلي -->
+    <article class="lab-curtain" id="lab-speaking" style="--lab-color: #f43f5e;" onclick="handleCurtainClick('lab-speaking')">
+      <div class="curtain-spine">
+        <div class="spine-left">
+          <div class="lab-svg-badge" style="background: linear-gradient(135deg, rgba(244, 63, 94, 0.28), rgba(159, 18, 57, 0.42)); border-color: rgba(251, 113, 133, 0.55);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffe4e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" stroke="#fb7185"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+          </div>
+          <div class="spine-title-group">
+            <span class="spine-en-sub" style="color: #fb7185;">SPEAKING COACH</span>
+            <h2 class="spine-ar-title">مدرب المحادثة التفاعلي</h2>
+          </div>
+        </div>
+
+        <div class="folded-preview-pills">
+          <span class="folded-mini-pill">محاكاة المكالمات والمواقف</span>
+          <span class="folded-mini-pill">مُلقّن تلميحات ذكي</span>
+          <span class="folded-mini-pill">تقييم الطلاقة والقواعد</span>
+        </div>
+
+        <div class="spine-meta">
+          <span class="lab-num-display">05</span>
+          <span class="open-curtain-hint">الاطلاع والاستكشاف ◄</span>
+        </div>
+      </div>
+
+      <div class="curtain-reveal-wrap">
+        <div class="curtain-reveal-body">
+          <p class="lab-summary-text">
+            محاكاة لمواقف الحياة الواقعية والمكالمات الهاتفية بملء الشاشة، مع مايكروفون متصل بدون تقطيع ومُلقّن تلميحات يمنحك الطلاقة.
+          </p>
+
+          <div class="lab-capsules-box">
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #f43f5e;"></span>
+              <span>مواقف جاهزة (المطار، الفندق، المقاهي، العيادة، ومقابلات العمل) أو مخصصة بالذكاء.</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #f43f5e;"></span>
+              <span>مؤقتات رد مرنة (3s / 8s / 15s) مع تلميحات مفتاحية قابلة للنطق والترجمة الفورية.</span>
+            </div>
+            <div class="lab-capsule-row">
+              <span class="capsule-bullet" style="background: #f43f5e;"></span>
+              <span>تقييم شامل للطلاقة والقواعد وتلوين ردودك مع اقتراحات المتحدث الأصلي (Native).</span>
+            </div>
+          </div>
+
+          <div class="curtain-actions-row" onclick="event.stopPropagation()">
+            <a id="link-speaking" href="https://naifwork.github.io/speaking/" class="btn-launch btn-emerald" style="flex: 1;" onmouseenter="SoundFX.air()">
+              <span>انطلق إلى مدرب المحادثة</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            <button type="button" class="btn-glass" onclick="speakPreview('Welcome to the Speaking Coach Dashboard. Practice real-life conversations and phone calls with confidence.')" title="معاينة صوتية ناطقة">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fb7185" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              <span style="font-size: 0.76rem;">معاينة</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 4. التذييل والتوقيع                                                        -->
+  <!-- ========================================================================= -->
+  <footer>
+    <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">
+      منظومة معمل اللغة الإنجليزية التفاعلي — تصميم وتطوير: <span style="color: var(--glow);">الأستاذ نايف الشومر</span>
+    </div>
+    <div style="font-size: 0.76rem; color: var(--muted);">
+      بيئة تدريب لغوي ذاتي متكاملة لتنمية المهارات الإنجليزية الخمس بأسلوب تفاعلي معزز بالذكاء الاصطناعي
+    </div>
+  </footer>
+
+</div>
+
+<!-- الإشعار الذكي العائم (Smart Toast) -->
+<div id="smartToast" class="smart-toast" role="status" aria-live="polite">
+  <span style="width: 34px; height: 34px; border-radius: 10px; background: rgba(16, 185, 129, 0.2); border: 1px solid var(--glow); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+  </span>
+  <div id="smartToastText" style="line-height: 1.5;"></div>
+</div>
+
+<script>
+  // ============================================================================
+  // 🔗 مكان تعديل روابط الصفحات الخمس (ضع روابطك أو أسماء ملفاتك هنا بسهولة)
+  // ============================================================================
+  const LAB_LINKS = {
+    vocab: "https://naifwork.github.io/Reading/1/",       // رابط معمل المفردات
+    listening: "https://naifwork.github.io/listening1/", // رابط استوديو الاستماع
+    reading: "https://naifwork.github.io/Reading/",       // رابط مدرب القراءة
+    writing: "https://naifwork.github.io/writing/",       // رابط مدرب الكتابة
+    speaking: "https://naifwork.github.io/speaking/"      // رابط مدرب المحادثة
+  };
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('link-vocab').href = LAB_LINKS.vocab;
+    document.getElementById('link-listening').href = LAB_LINKS.listening;
+    document.getElementById('link-reading').href = LAB_LINKS.reading;
+    document.getElementById('link-writing').href = LAB_LINKS.writing;
+    document.getElementById('link-speaking').href = LAB_LINKS.speaking;
+
+    checkBrowserAndSetupEdgeTip();
+
+    // نبضة ترحيبية متتابعة على الستائر الخمس عند فتح الصفحة
+    const allCurtains = document.querySelectorAll('.lab-curtain');
+    allCurtains.forEach((c, idx) => {
+      setTimeout(() => {
+        c.classList.add('shimmer-intro');
+        setTimeout(() => c.classList.remove('shimmer-intro'), 700);
+      }, 150 + idx * 110);
+    });
+  });
+
+  // ============================================================================
+  // 🌬️ محرك صوت الهواء الناعم جداً (Ultra-Soft Air Breeze Synthesizer)
+  // ============================================================================
+  const SoundFX = (() => {
+    let ctx = null;
+    let noiseBuffer = null;
+    let lastAirTime = 0;
+
+    function getAudio() {
+      if (!ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) ctx = new AudioCtx();
+      }
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+      if (ctx && !noiseBuffer) {
+        const bufferSize = ctx.sampleRate * 0.35;
+        noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.997 * b0 + white * 0.029;
+          b1 = 0.985 * b1 + white * 0.032;
+          b2 = 0.950 * b2 + white * 0.048;
+          output[i] = (b0 + b1 + b2 + white * 0.015) * 0.35;
+        }
+      }
+      return ctx;
+    }
+
+    function playAirBreeze(duration = 0.14, startFreq = 380, endFreq = 620, maxVolume = 0.018) {
+      try {
+        const a = getAudio();
+        if (!a || !noiseBuffer) return;
+        const now = a.currentTime;
+        const source = a.createBufferSource();
+        source.buffer = noiseBuffer;
+
+        const filter = a.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.Q.setValueAtTime(1.8, now);
+        filter.frequency.setValueAtTime(startFreq, now);
+        filter.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+
+        const gain = a.createGain();
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(maxVolume, now + duration * 0.32);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        source.connect(filter);
+        filter.connect(gain);
+        gain.connect(a.destination);
+
+        source.start(now);
+        source.stop(now + duration + 0.02);
+      } catch (_) {}
+    }
+
+    return {
+      air() {
+        const now = performance.now();
+        if (now - lastAirTime < 85) return;
+        lastAirTime = now;
+        playAirBreeze(0.09, 420, 680, 0.012);
+      },
+      curtainWhoosh() {
+        playAirBreeze(0.19, 300, 560, 0.022);
+      }
+    };
+  })();
+
+  // ============================================================================
+  // 🎭 التحكم في الستارة المعرفية العلوية (Top Smart Curtain)
+  // ============================================================================
+  let activeTopDrawer = null;
+
+  function toggleTopCurtain(paneKey) {
+    const curtain = document.getElementById('topSmartCurtain');
+    const triggers = {
+      pillars: document.getElementById('trig-pillars'),
+      how: document.getElementById('trig-how'),
+      roadmap: document.getElementById('trig-roadmap')
+    };
+    const panes = {
+      pillars: document.getElementById('pane-pillars'),
+      how: document.getElementById('pane-how'),
+      roadmap: document.getElementById('pane-roadmap')
+    };
+
+    if (!paneKey || activeTopDrawer === paneKey) {
+      activeTopDrawer = null;
+      curtain.classList.remove('open');
+      Object.values(triggers).forEach(b => b && b.classList.remove('active'));
+      SoundFX.curtainWhoosh();
+      return;
+    }
+
+    activeTopDrawer = paneKey;
+    Object.keys(triggers).forEach(k => {
+      if (triggers[k]) triggers[k].classList.toggle('active', k === paneKey);
+      if (panes[k]) panes[k].classList.toggle('active', k === paneKey);
+    });
+    curtain.classList.add('open');
+    SoundFX.curtainWhoosh();
+  }
+
+  function toggleEdgeTip() {
+    const pop = document.getElementById('edgeTipPopover');
+    if (pop) {
+      pop.classList.toggle('open');
+      SoundFX.air();
+    }
+  }
+
+  // ============================================================================
+  // 🎬 التحكم في مسرح الستائر الخمس (تبدأ مطوية وتفتح عند التفاعل)
+  // ============================================================================
+  const LAB_SEQUENCE = ['lab-vocab', 'lab-listening', 'lab-reading', 'lab-writing', 'lab-speaking'];
+  let exploreDirection = 1;
+
+  function getNextLabId(currentId) {
+    const idx = LAB_SEQUENCE.indexOf(currentId);
+    if (idx === -1) return LAB_SEQUENCE[0];
+    if (idx >= LAB_SEQUENCE.length - 1) {
+      exploreDirection = -1;
+    } else if (idx <= 0) {
+      exploreDirection = 1;
+    }
+    const nextIdx = idx + exploreDirection;
+    return LAB_SEQUENCE[nextIdx] || LAB_SEQUENCE[0];
+  }
+
+  function updateCurtainHints(activeLabId) {
+    document.querySelectorAll('.lab-curtain').forEach(c => {
+      const hint = c.querySelector('.open-curtain-hint');
+      if (hint) {
+        if (c.classList.contains('active')) {
+          hint.textContent = (exploreDirection === 1) ? '◄' : '►';
+          hint.title = (exploreDirection === 1) ? 'انتقال للمعمل التالي ◄' : 'عودة للمعمل السابق ►';
+        } else {
+          hint.textContent = 'الاطلاع والاستكشاف ◄';
+          hint.title = 'فتح المعمل';
+        }
+      }
+    });
+  }
+
+  function activateLabCurtain(labId, lockPin = true) {
+    if (!labId) {
+      document.querySelectorAll('.lab-curtain').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.compass-chip').forEach(ch => ch.classList.remove('active'));
+      updateCurtainHints(null);
+      return;
+    }
+
+    const target = document.getElementById(labId);
+    if (!target) return;
+
+    const wasActive = target.classList.contains('active');
+    document.querySelectorAll('.lab-curtain').forEach(c => {
+      c.classList.toggle('active', c.id === labId);
+    });
+
+    document.querySelectorAll('.compass-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.target === labId);
+    });
+
+    updateCurtainHints(labId);
+
+    if (!wasActive) {
+      SoundFX.curtainWhoosh();
+    }
+
+    if (window.innerWidth < 1024) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 120);
+    }
+  }
+
+  function handleCurtainClick(labId) {
+    const target = document.getElementById(labId);
+    if (!target) return;
+
+    if (target.classList.contains('active')) {
+      const nextId = getNextLabId(labId);
+      activateLabCurtain(nextId, true);
+    } else {
+      const idx = LAB_SEQUENCE.indexOf(labId);
+      if (idx !== -1) {
+        exploreDirection = (idx >= LAB_SEQUENCE.length - 1) ? -1 : 1;
+      }
+      activateLabCurtain(labId, true);
+    }
+  }
+
+  function handleCompassClick(labId) {
+    const target = document.getElementById(labId);
+    if (!target) return;
+
+    if (target.classList.contains('active')) {
+      activateLabCurtain(null);
+      SoundFX.curtainWhoosh();
+    } else {
+      const idx = LAB_SEQUENCE.indexOf(labId);
+      if (idx !== -1) {
+        exploreDirection = (idx >= LAB_SEQUENCE.length - 1) ? -1 : 1;
+      }
+      activateLabCurtain(labId, true);
+    }
+  }
+
+  function checkBrowserAndSetupEdgeTip() {
+    const isEdge = /Edg\//i.test(navigator.userAgent);
+    const tipBtn = document.getElementById('edgeTipBtn');
+    const tipContent = document.getElementById('edgeTipContent');
+    if (!tipBtn || !tipContent) return;
+
+    if (isEdge) {
+      tipBtn.style.background = 'rgba(16, 185, 129, 0.16)';
+      tipBtn.style.borderColor = 'rgba(52, 211, 153, 0.45)';
+      tipBtn.style.color = '#a7f3d0';
+      tipBtn.innerHTML = '<span>✅ متصفح Edge متصل (أصوات طبيعية)</span>';
+      tipContent.innerHTML = '<strong>🎉 متصفح Microsoft Edge متصل بنجاح:</strong> الأصوات البشرية الطبيعية الفائقة (Natural Neural Voices) مفعلة وتعمل بكامل طاقتها على جهازك مجاناً وبدون أي متطلبات برمجية.';
+    } else {
+      tipBtn.style.background = 'rgba(245, 158, 11, 0.18)';
+      tipBtn.style.borderColor = 'rgba(251, 191, 36, 0.55)';
+      tipBtn.style.color = '#fde68a';
+      tipBtn.innerHTML = '<span>💡 تنبيه الأصوات (يُنصح بـ Edge)</span>';
+      tipContent.innerHTML = '<strong>💡 تنبيه للحصول على أفضل تجربة صوتية:</strong> نلاحظ استخدامك لمتصفح غير Edge. الاستخدام الأمثل للمعمل يكون عبر <b>جهاز الكمبيوتر (PC)</b> ومتصفح <b>Microsoft Edge</b> للتمتع بأكثر من <b>40 صوتاً بشرياً طبيعياً (Natural Neural)</b> خالية من الروبوتية مجاناً.';
+    }
+  }
+
+  // ============================================================================
+  // 🔊 محرك النطق الصوتي + عداد الأصوات المدعومة + الإشعار العائم
+  // ============================================================================
+  let availableVoices = [];
+  let toastTimer = null;
+
+  function showSmartToast(htmlMsg, duration = 4200) {
+    const toast = document.getElementById('smartToast');
+    const txt = document.getElementById('smartToastText');
+    if (!toast || !txt) return;
+    txt.innerHTML = htmlMsg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  function loadVoices() {
+    if (!('speechSynthesis' in window)) return;
+    const all = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    all.sort((a, b) => {
+      const aNat = a.name.includes('Natural') || a.name.includes('Online');
+      const bNat = b.name.includes('Natural') || b.name.includes('Online');
+      return (bNat ? 1 : 0) - (aNat ? 1 : 0);
+    });
+    availableVoices = all;
+
+    const countEl = document.getElementById('voicesCountNum');
+    if (countEl) {
+      countEl.textContent = `${all.length} صوتاً`;
+    }
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+    setTimeout(loadVoices, 400);
+  }
+
+  function speakPreview(text) {
+    SoundFX.air();
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const wave = document.getElementById('globalWaveIndicator');
+    const utter = new SpeechSynthesisUtterance(text);
+    if (availableVoices.length > 0) utter.voice = availableVoices[0];
+    utter.rate = 0.94;
+    utter.onstart = () => wave && wave.classList.add('speaking');
+    utter.onend = () => wave && wave.classList.remove('speaking');
+    utter.onerror = () => wave && wave.classList.remove('speaking');
+    window.speechSynthesis.speak(utter);
+  }
+
+  function testSystemVoice() {
+    if (!('speechSynthesis' in window)) {
+      showSmartToast('المتصفح الحالي لا يدعم محرك النطق الصوتي التلقائي.');
+      return;
+    }
+    loadVoices();
+    const count = availableVoices.length;
+    const activeName = count > 0 ? availableVoices[0].name.split(' - ')[0] : 'Default English Voice';
+    speakPreview("Welcome to the Interactive English Language Lab. Your audio system is active and ready.");
+    showSmartToast(`<div><span style="color:#6ee7b7;">محرك النطق الصوتي جاهز ويعمل بكفاءة</span><br><span style="font-size:0.75rem;color:#94b8ac;">الأصوات الإنجليزية المدعومة في متصفحك: (${count}) • الصوت النشط: ${activeName}</span></div>`);
+  }
+</script>
+
+
+</body></html>
