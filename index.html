@@ -1493,12 +1493,47 @@
   <!-- ========================================================================= -->
   <footer>
     <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">
-      منظومة معمل اللغة الإنجليزية التفاعلي — تصميم وتطوير: <span style="color: var(--glow);">الأستاذ نايف الشومر</span>
+      منظومة معمل اللغة الإنجليزية التفاعلي — تصميم وتطوير: 
+      <span onclick="openContactModal()" onmouseenter="SoundFX.air()" style="color: var(--glow); cursor: pointer; border-bottom: 1.5px dashed var(--glow); padding-bottom: 2px; transition: all 0.25s ease;" title="انقر هنا للاقتراحات والتواصل">
+        الأستاذ نايف الشومر ✉️
+      </span>
     </div>
     <div style="font-size: 0.76rem; color: var(--muted);">
       بيئة تدريب لغوي ذاتي متكاملة لتنمية المهارات الإنجليزية الخمس بأسلوب تفاعلي معزز بالذكاء الاصطناعي
     </div>
   </footer>
+
+  <!-- نافذة التواصل والاستفسارات المنبثقة -->
+  <div id="contactModal" style="display:none; position:fixed; inset:0; background:rgba(2,10,7,0.82); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:99999; align-items:center; justify-content:center; padding:16px;" onclick="if(event.target == this) closeContactModal()">
+    <div style="background:linear-gradient(145deg, rgba(9, 31, 23, 0.98), rgba(4, 16, 12, 0.99)); border:1px solid var(--border-strong); border-radius:20px; max-width:440px; width:100%; padding:24px; box-shadow:0 24px 50px rgba(0,0,0,0.65), 0 0 30px rgba(16, 185, 129, 0.25); text-align:center; position:relative; animation:paneFade 0.25s ease;">
+      
+      <button type="button" onclick="closeContactModal()" style="position:absolute; top:14px; left:14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:var(--muted); width:32px; height:32px; border-radius:10px; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; transition:all 0.2s;" onmouseenter="this.style.color='#fff'; this.style.borderColor='var(--glow)'" onmouseleave="this.style.color='var(--muted)'; this.style.borderColor='rgba(255,255,255,0.12)'">✕</button>
+
+      <div style="width:54px; height:54px; border-radius:16px; background:rgba(16,185,129,0.14); border:1px solid var(--border-strong); display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; box-shadow:0 0 20px rgba(16,185,129,0.3);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      </div>
+
+      <h3 style="color:#fff; font-size:1.15rem; font-weight:800; margin-bottom:6px;">للاقتراحات والاستفسارات</h3>
+      <p style="color:var(--muted); font-size:0.83rem; line-height:1.6; margin-bottom:18px;">
+        يسعدنا دائماً استقبال آرائكم وملاحظاتكم التطويرية حول منظومة المعمل عبر البريد الإلكتروني التالي:
+      </p>
+
+      <div style="background:var(--surface-inner); border:1px solid var(--border); border-radius:12px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:18px;">
+        <span id="devEmailAddress" style="font-family:monospace; font-size:0.92rem; color:#67e8f9; font-weight:700; direction:ltr;">naif.work.xw@gmail.com</span>
+        <button type="button" id="copyEmailBtn" class="btn-glass btn-compact" onclick="copyDevEmail()" style="font-size:0.75rem; padding:6px 12px;">
+          <span id="copyEmailLabel">نسخ</span> 📋
+        </button>
+      </div>
+
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <a href="mailto:naif.work.xw@gmail.com?subject=اقتراح%20/%20استفسار%20حول%20معمل%20اللغة%20الإنجليزية" class="btn-launch btn-emerald" style="flex:1; padding:9px 14px; font-size:0.82rem; text-decoration:none;" onmouseenter="SoundFX.air()">
+          <span>مراسلة مباشرة</span> ✉️
+        </a>
+        <button type="button" class="btn-glass" onclick="closeContactModal()" style="padding:9px 16px; font-size:0.82rem;">إغلاق</button>
+      </div>
+
+    </div>
+  </div>
 
 </div>
 
@@ -1839,6 +1874,37 @@
     speakPreview("Welcome to the Interactive English Language Lab. Your audio system is active and ready.");
     showSmartToast(`<div><span style="color:#6ee7b7;">محرك النطق الصوتي جاهز ويعمل بكفاءة</span><br><span style="font-size:0.75rem;color:#94b8ac;">الأصوات الإنجليزية المدعومة في متصفحك: (${count}) • الصوت النشط: ${activeName}</span></div>`);
   }
+
+  // دوال نافذة التواصل والاستفسارات
+  function openContactModal() {
+    SoundFX.curtainWhoosh();
+    const modal = document.getElementById('contactModal');
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closeContactModal() {
+    SoundFX.air();
+    const modal = document.getElementById('contactModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function copyDevEmail() {
+    const email = "naif.work.xw@gmail.com";
+    navigator.clipboard.writeText(email).then(() => {
+      const lbl = document.getElementById('copyEmailLabel');
+      if (lbl) {
+        lbl.textContent = 'تم النسخ! ✓';
+        setTimeout(() => { lbl.textContent = 'نسخ'; }, 2200);
+      }
+      showSmartToast('تم نسخ البريد الإلكتروني للحافظة: ' + email);
+    }).catch(() => {
+      showSmartToast('البريد: ' + email);
+    });
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key == 'Escape') closeContactModal();
+  });
 </script>
 
 
