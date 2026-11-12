@@ -1908,4 +1908,129 @@
 </script>
 
 
+
+
+<script>
+try {
+(function() {
+  const SURVEY_URL = 'https://forms.gle/VntAwpPEFGuYhL7j6';
+  const oldWidget = document.getElementById('elapQuickSurveyWidget');
+  if (oldWidget) oldWidget.remove();
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #elapQuickSurveyWidget {
+      position: fixed;
+      bottom: 18px;
+      left: 18px;
+      z-index: 9500;
+      width: 285px;
+      max-width: calc(100vw - 36px);
+      background: linear-gradient(145deg, rgba(9, 34, 25, 0.96), rgba(4, 16, 12, 0.98));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(52, 211, 153, 0.48);
+      border-top: 3px solid #10b981;
+      border-radius: 16px;
+      padding: 13px 15px;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.65), 0 0 22px rgba(16, 185, 129, 0.2);
+      color: #ecfdf5;
+      font-family: 'Alyamama', system-ui, sans-serif;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      animation: surveyPopIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s both;
+    }
+    @keyframes surveyPopIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    #elapQuickSurveyWidget.minimized {
+      width: auto;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border-top-width: 1px;
+      cursor: pointer;
+    }
+    #elapQuickSurveyWidget.minimized .survey-full-body {
+      display: none;
+    }
+    #elapQuickSurveyWidget:not(.minimized) .survey-mini-pill {
+      display: none;
+    }
+    .survey-cta-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .survey-cta-link:hover {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      transform: translateY(-1px);
+    }
+  `;
+  document.head.appendChild(style);
+
+  const widget = document.createElement('aside');
+  widget.id = 'elapQuickSurveyWidget';
+  widget.setAttribute('aria-label', 'استبيان سريع');
+  widget.innerHTML = `
+    <div class="survey-mini-pill" style="display:flex; align-items:center; gap:7px; font-size:0.79rem; font-weight:800; color:#a7f3d0;">
+      <span style="width:8px; height:8px; border-radius:50%; background:#34d399; box-shadow:0 0 8px #34d399;"></span>
+      <span>📝 استبيان سريع</span>
+    </div>
+
+    <div class="survey-full-body">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+        <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.84rem; font-weight:800; color:#fff;">
+          <span>📝</span>
+          <span>استبيان سريع</span>
+          <span style="font-size:0.68rem; color:#fde68a; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.38); padding:1px 7px; border-radius:999px;">أقل من دقيقة</span>
+        </span>
+        <button type="button" id="minimizeSurveyBtn" title="تصغير النافذة" style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.14); color:#94b8ac; width:24px; height:24px; border-radius:7px; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; padding:0;">—</button>
+      </div>
+
+      <p style="font-size:0.76rem; color:#d1fae5; line-height:1.55; margin-bottom:10px;">
+        رأيك يصنع الأثر! شاركنا تقييمك السريع لتجربتك في معمل اللغة الإنجليزية.
+      </p>
+
+      <a href="${SURVEY_URL}" target="_blank" rel="noopener noreferrer" class="survey-cta-link" id="openSurveyFormLink">
+        <span>ابدأ الاستبيان الآن</span>
+        <span>◄</span>
+      </a>
+    </div>
+  `;
+
+  document.body.appendChild(widget);
+
+  const minBtn = document.getElementById('minimizeSurveyBtn');
+  const linkBtn = document.getElementById('openSurveyFormLink');
+
+  minBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    widget.classList.add('minimized');
+    if (typeof SoundFX !== 'undefined') SoundFX.air();
+  });
+
+  widget.addEventListener('click', () => {
+    if (widget.classList.contains('minimized')) {
+      widget.classList.remove('minimized');
+      if (typeof SoundFX !== 'undefined') SoundFX.air();
+    }
+  });
+
+  linkBtn.addEventListener('mouseenter', () => {
+    if (typeof SoundFX !== 'undefined') SoundFX.air();
+  });
+})();
+} catch(err) { console.error("Injected Script Error:", err); }
+</script>
 </body></html>
